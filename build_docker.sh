@@ -75,6 +75,8 @@ if [ -n "${IS_PUSH}" ]; then
 	docker login
 fi
 
+ORIGINAL_WORKING_DIR=${pwd}
+
 if [ -n "$STAGING_DIR" ]; then
     GITHUB_DIR="tags/"
 
@@ -114,8 +116,8 @@ if [ -z "${IS_NOT_RUN_UNIT_TESTS}" ] ; then
 		REMOVE_CONTAINER_STRING=" "
 	fi
 
-	echo docker run ${REMOVE_CONTAINER_STRING} -t ${REPO_PRJ}:${GITHUB_TAG} bash /root/run_unit_tests.sh
-	docker run ${REMOVE_CONTAINER_STRING} -t ${REPO_PRJ}:${GITHUB_TAG} bash /root/run_unit_tests.sh
+	echo docker run ${REMOVE_CONTAINER_STRING} -v ${ORIGINAL_WORKING_DIR}/src/test/resources:/testdata -t ${REPO_PRJ}:${GITHUB_TAG} bash /root/run_unit_tests.sh
+	docker run ${REMOVE_CONTAINER_STRING} -v ${ORIGINAL_WORKING_DIR}/src/test/resources:/testdata -t ${REPO_PRJ}:${GITHUB_TAG} bash /root/run_unit_tests.sh
 	echo " Unit tests passed..."
 fi
 
